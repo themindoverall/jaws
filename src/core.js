@@ -99,7 +99,12 @@ jaws.init = function(options) {
     }
   }
 
-  jaws.canvas = document.getElementsByTagName('canvas')[0]
+  if (options.canvas) {
+    jaws.canvas = options.canvas;
+  } else {
+    jaws.canvas = document.getElementsByTagName('canvas')[0];
+  }
+
   if(!jaws.canvas) { jaws.dom = document.getElementById("canvas") }
 
   // Ordinary <canvas>, get context

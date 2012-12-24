@@ -34,6 +34,8 @@ jaws.Viewport = function ViewPort(options) {
   this.context = options.context || jaws.context
   this.width = options.width || jaws.width
   this.height = options.height || jaws.height
+  this.min_x = options.min_x || 0
+  this.min_y = options.min_y || 0
   this.max_x = options.max_x || jaws.width 
   this.max_y = options.max_y || jaws.height
   this.x = options.x || 0
@@ -128,9 +130,9 @@ jaws.Viewport = function ViewPort(options) {
    * viewport.forceInside(player, 10) 
    */
   this.forceInside = function(item, buffer) {
-    if(item.x < buffer)               { item.x = buffer }
+    if(item.x < this.min_x+buffer)               { item.x = this.min_x+buffer }
     if(item.x > this.max_x-buffer)    { item.x = this.max_x-buffer }
-    if(item.y < buffer)               { item.y = buffer }
+    if(item.y < this.min_y+buffer)               { item.y = this.min_y+buffer }
     if(item.y > this.max_y-buffer)    { item.y = this.max_y-buffer }
   }
 
@@ -148,7 +150,7 @@ jaws.Viewport = function ViewPort(options) {
   */
   this.apply = function(func) {
     this.context.save()
-    this.context.translate(-this.x, -this.y)
+    this.context.translate(-Math.floor(this.x), -Math.floor(this.y))
     func()
     this.context.restore()
   };
@@ -183,7 +185,7 @@ jaws.Viewport = function ViewPort(options) {
   /** @private */
   this.verifyPosition = function() {
     var max = this.max_x - this.width
-    if(this.x < 0)      { this.x = 0 }
+    if(this.x < this.min_x)      { this.x = this.min_x }
     if(this.x > max)    { this.x = max }
 
     var max = this.max_y - this.height
